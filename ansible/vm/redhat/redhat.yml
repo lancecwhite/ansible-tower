@@ -3,16 +3,16 @@
   connection: local
   gather_facts: no
   remote_user: root
-  include_vars:
-    - vars.yml
+  vars_files:
+    - vault.yml
 
   tasks:
-   - name: Create a VM
+   - name: Create a RedHat VM
      delegate_to: localhost
      vsphere_guest:
        vcenter_hostname: '{{ vc_name }}'
        esxi:
-         datacenter: ha-datacenter
+         datacenter: homelab datacenter
          hostname: '{{ vc_name }}'
        username: '{{ myuser }}'
        password: '{{ mypass }}'

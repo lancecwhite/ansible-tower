@@ -13,6 +13,7 @@
         hostname: "{{ vc_name }}"
         username: "{{ myuser }}"
         password: "{{ mypass }}"
+        folder: /
         validate_certs: no
         name: Hoobastank01
         state: poweredon

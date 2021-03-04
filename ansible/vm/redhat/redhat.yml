@@ -37,6 +37,6 @@
           netmask: 255.255.255.0
           device_type: vmxnet3
         wait_for_ip_address: yes
+        validate_certs: no
       delegate_to: localhost
       register: deploy_vm
-      validate_certs: no

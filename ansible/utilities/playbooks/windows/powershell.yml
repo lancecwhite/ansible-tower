@@ -1,3 +1,4 @@
+#emery is the coolest!
 ---
 - hosts: all
   tasks:

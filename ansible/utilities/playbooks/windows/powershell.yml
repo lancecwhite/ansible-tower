@@ -1,8 +1,8 @@
 ---
-- hosts: all 
+- hosts: all
   tasks:
    - name: Get disk facts
-     win_command: wmic cpu get caption, deviceid, name, numberofcores, maxclockspeed, status
+     win_command: wmic cpu get caption, deviceid, name, numberofcores, maxclockspeed, status, process list
      register: usage
 
    - debug: msg="{{ usage.stdout }}"

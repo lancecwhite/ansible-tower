@@ -7,38 +7,34 @@
     - vault.yml
 
   tasks:
-   - name: Create a RedHat VM
-     delegate_to: localhost
-     vsphere_guest:
-       vcenter_hostname: '{{ vc_name }}'
-       esxi:
-         datacenter: homelab datacenter
-         hostname: '{{ vc_name }}'
-       username: '{{ myuser }}'
-       password: '{{ mypass }}'
-       validate_certs: no
-       guest: '{{ guest_name }}'
-       state: powered_on
-       vm_extra_config:
-         vcpu.hotadd: yes
-         mem.hotadd:  yes
-         notes: This is a RedHat (CentOS) test VM created using Ansible
 
-       vm_disk:
-         disk1:
-           size_gb: 15
-           type: thin
-           datastore: r2d2
-       vm_nic:
-         nic1:
-           type: vmxnet3
-           network: homelab network
-           network_type: standard
-       vm_hardware:
-         memory_mb: 2048
-         num_cpus: 2
-         osid: centos8_64Guest
-         scsi: paravirtual
-         vm_cdrom:
-           type: "iso"
-           iso_path: "iso images/centos.iso"
+    - name: Create a virtual machine on given ESXi hostname
+      vmware_guest:
+        hostname: "{{ vc_name }}"
+        username: "{{ myuser }}"
+        password: "{{ mypass }}"
+        validate_certs: no
+        name: Hoobastank01
+        state: poweredon
+        guest_id: centos64Guest
+        esxi_hostname: "{{ vc_name }}"
+        disk:
+        - size_gb: 10
+          type: thin
+          datastore: r2d2
+        hardware:
+          memory_mb: 512
+          num_cpus: 4
+          scsi: paravirtual
+        cdrom:
+          type: iso
+          iso_path: "[c3po] iso/centos.iso"
+        networks:
+        - name: homelab network
+          mac: aa:bb:dd:aa:00:14
+          ip: 172.30.1.201
+          netmask: 255.255.255.0
+          device_type: vmxnet3
+        wait_for_ip_address: yes
+      delegate_to: localhost
+      register: deploy_vm

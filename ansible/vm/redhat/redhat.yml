@@ -1,0 +1,44 @@
+---
+- hosts: localhost
+  connection: local
+  gather_facts: no
+  remote_user: root
+  include_vars:
+    - vars.yml
+
+  tasks:
+   - name: Create a VM
+     delegate_to: localhost
+     vsphere_guest:
+       vcenter_hostname: '{{ vc_name }}'
+       esxi:
+         datacenter: ha-datacenter
+         hostname: '{{ vc_name }}'
+       username: '{{ myuser }}'
+       password: '{{ mypass }}'
+       validate_certs: no
+       guest: '{{ guest_name }}'
+       state: powered_on
+       vm_extra_config:
+         vcpu.hotadd: yes
+         mem.hotadd:  yes
+         notes: This is a RedHat (CentOS) test VM created using Ansible
+
+       vm_disk:
+         disk1:
+           size_gb: 15
+           type: thin
+           datastore: r2d2
+       vm_nic:
+         nic1:
+           type: vmxnet3
+           network: homelab network
+           network_type: standard
+       vm_hardware:
+         memory_mb: 2048
+         num_cpus: 2
+         osid: centos8_64Guest
+         scsi: paravirtual
+         vm_cdrom:
+           type: "iso"
+           iso_path: "iso images/centos.iso"

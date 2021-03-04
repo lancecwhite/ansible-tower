@@ -1,7 +1,8 @@
-- name: test powershell module
-  hosts: all
+---
+- hosts: all 
   tasks:
-    - name: run a powershell script
-      script: scripts/config_updates.ps1
-      register: out
-    - debug: var=out
+   - name: Get disk facts
+     win_command: wmic cpu get caption, deviceid, name, numberofcores, maxclockspeed, status
+     register: usage
+
+   - debug: msg="{{ usage.stdout }}"

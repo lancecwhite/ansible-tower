@@ -1,0 +1,7 @@
+- name: test powershell module
+  hosts: all
+  tasks:
+    - name: run a powershell script
+      script: scripts/memory_check.ps1
+      register: out
+    - debug: var=out

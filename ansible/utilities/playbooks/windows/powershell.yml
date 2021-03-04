@@ -2,6 +2,6 @@
   hosts: all
   tasks:
     - name: run a powershell script
-      script: powershell.exe -NonInteractive scripts/memory_check.ps1
+      script: scripts/memory_check.ps1 -NonInteractive
       register: out
     - debug: var=out

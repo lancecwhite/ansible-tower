@@ -8,35 +8,43 @@
 
   tasks:
 
-    - name: Create a virtual machine on given ESXi hostname
+    - name: Create a virtual machine from a template
       vmware_guest:
         hostname: "{{ vc_name }}"
         username: "{{ myuser }}"
         password: "{{ mypass }}"
-        folder: /
         validate_certs: no
-        name: Hoobastank01
+        folder: /Ansible/ansible-staging
+        name: testvm_1
         state: poweredon
-        guest_id: centos64Guest
-        esxi_hostname: "{{ vc_name }}"
+        template: RedHat
+        datacenter: homelab
         disk:
-        - size_gb: 10
+        - size_gb: 16
           type: thin
-          datastore: r2d2
+          datastore: naboo
         hardware:
-          memory_mb: 512
-          num_cpus: 4
+          memory_mb: 1024
+          num_cpus: 1
+          num_cpu_cores_per_socket: 1
           scsi: paravirtual
-        cdrom:
-          type: iso
-          iso_path: "[c3po] iso/centos.iso"
+          hotadd_cpu: True
+          hotremove_cpu: True
+          hotadd_memory: False
+          version: 12
+          boot_firmware: "efi"
         networks:
         - name: homelab network
-          mac: aa:bb:dd:aa:00:14
-          ip: 172.30.1.201
-          netmask: 255.255.255.0
+          type: dhcp
           device_type: vmxnet3
+          start_connected: True
+        customization:
+          dns_servers:
+            - 172.30.1.252
+            - 1.1.1.1
+          dns_suffix:
+            - testvm_1.kingdom.local
+          hostname: testvm_1
         wait_for_ip_address: yes
-        validate_certs: no
       delegate_to: localhost
-      register: deploy_vm
+      register: deploy
